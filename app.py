@@ -690,6 +690,8 @@ def cart():
 
     return render_template('kart.html', cart=cart_items, total=total, stock_error=stock_error)
 
+import subprocess
+
 @app.route('/pull_and_reload', methods=['POST'])
 def pull_and_reload():
     token = request.headers.get("X-Auth-Token")
@@ -697,9 +699,20 @@ def pull_and_reload():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        os.system("cd /home/prajwal5028/Inventory-Management && git pull")
-        os.system("touch /var/www/invmgmt_pythonanywhere_com_wsgi.py")  # reload app
-        return jsonify({"status": "success"})
+        # Pull latest changes
+        pull_result = subprocess.run(
+            ["git", "-C", "/home/prajwal5028/Inventory-Management", "pull"],
+            capture_output=True, text=True
+        )
+        
+        # Reload the app
+        subprocess.run(["touch", "/var/www/invmgmt_pythonanywhere_com_wsgi.py"])
+
+        return jsonify({
+            "status": "success",
+            "pull_stdout": pull_result.stdout,
+            "pull_stderr": pull_result.stderr
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
