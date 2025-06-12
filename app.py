@@ -14,9 +14,9 @@ app.secret_key = '41f4cfa3623d79af0b306d17f321d482'  # Replace with a secure key
 import os
 
 DB_CONFIG = {
-    'host': 'invmgmt.mysql.pythonanywhere-services.com',
-    'database': 'invmgmt$default',
-    'user': 'invmgmt',
+    'host': 'prajwal5028.mysql.pythonanywhere-services.com',
+    'database': 'prajwal5028$default',
+    'user': 'prajwal5028',
     'password': 'RcbChampions@2025'  # Change to your actual MySQL password
 }
 
