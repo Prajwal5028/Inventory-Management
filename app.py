@@ -697,7 +697,7 @@ def pull_and_reload():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        os.system("cd /home/invmgmt/InventoryManagement && git pull")
+        os.system("cd /home/prajwal5028/Inventory-Management && git pull")
         os.system("touch /var/www/invmgmt_pythonanywhere_com_wsgi.py")  # reload app
         return jsonify({"status": "success"})
     except Exception as e:
