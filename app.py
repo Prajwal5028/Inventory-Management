@@ -699,20 +699,9 @@ def pull_and_reload():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Pull latest changes
-        pull_result = subprocess.run(
-            ["git", "-C", "/home/prajwal5028/Inventory-Management", "pull"],
-            capture_output=True, text=True
-        )
-        
-        # Reload the app
-        subprocess.run(["touch", "/var/www/invmgmt_pythonanywhere_com_wsgi.py"])
-
-        return jsonify({
-            "status": "success",
-            "pull_stdout": pull_result.stdout,
-            "pull_stderr": pull_result.stderr
-        })
+        os.system("cd /home/prajwal5028/Inventory-Management && git pull")
+        os.system("touch /var/www/invmgmt_pythonanywhere_com_wsgi.py")  # reload app
+        return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
