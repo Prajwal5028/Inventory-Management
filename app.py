@@ -691,6 +691,17 @@ def cart():
     return render_template('kart.html', cart=cart_items, total=total, stock_error=stock_error)
 
 import subprocess
+import requests
+
+def reload_webapp():
+    username = "prajwal5028"
+    token = os.environ.get("PA_RELOAD_TOKEN")  # store this token in WSGI
+    headers = {"Authorization": f"Token {token}"}
+    url = f"https://www.pythonanywhere.com/api/v0/user/{username}/webapps/{username}.pythonanywhere.com/reload/"
+
+    response = requests.post(url, headers=headers)
+    return response.status_code, response.text
+
 
 @app.route('/pull_and_reload', methods=['POST'])
 def pull_and_reload():
@@ -700,10 +711,16 @@ def pull_and_reload():
 
     try:
         os.system("cd /home/prajwal5028/Inventory-Management && git pull")
-        os.system("touch /var/www/prajwal5028_pythonanywhere_com_wsgi.py")  # reload app
-        return jsonify({"status": "success"})
+
+        # reload using API
+        reload_status, reload_response = reload_webapp()
+        if reload_status != 200:
+            return jsonify({"error": "Reload failed", "details": reload_response}), 500
+
+        return jsonify({"status": "success", "reload": "complete"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # 6. Logout Route
 @app.route('/logout')
